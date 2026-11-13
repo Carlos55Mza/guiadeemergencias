@@ -14,6 +14,7 @@
             --rojo-urgencia: #ff3b30;
             --verde-ok: #34c759;
             --azul-info: #0a84ff;
+            --naranja-aviso: #ff9500;
             --texto-principal: #ffffff;
             --texto-secundario: #9baec8;
         }
@@ -27,7 +28,6 @@
         }
 
         body {
-            /* Fondo con imagen temática de emergencias / rescate con capa oscura encima para legibilidad */
             background: var(--bg-overlay), url('https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1000&q=80') no-repeat center center fixed;
             background-size: cover;
             color: var(--texto-principal);
@@ -40,9 +40,9 @@
 
         header {
             text-align: center;
-            margin-bottom: 18px;
+            margin-bottom: 15px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 12px;
+            padding-bottom: 10px;
             backdrop-filter: blur(6px);
         }
 
@@ -65,7 +65,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
-            margin-bottom: 18px;
+            margin-bottom: 14px;
         }
 
         .btn-911 {
@@ -91,7 +91,6 @@
         .btn-gps {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border: 1.5px solid rgba(10, 132, 255, 0.4);
             color: white;
             padding: 12px 10px;
@@ -109,8 +108,35 @@
 
         .btn-gps:active { transform: scale(0.97); }
 
-        #info-gps {
-            background: rgba(22, 34, 47, 0.9);
+        /* BARRA SECUNDARIA DE UTILIDADES */
+        .utilidades-extras {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .btn-util {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: white;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+
+        .btn-util:active { background: rgba(50, 65, 80, 0.9); }
+
+        #info-gps, #panel-telefonos {
+            background: rgba(22, 34, 47, 0.95);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(10, 132, 255, 0.3);
             border-radius: 12px;
@@ -122,15 +148,39 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
 
+        #panel-telefonos {
+            text-align: left;
+            border-color: rgba(52, 199, 89, 0.4);
+        }
+
+        .item-tel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .item-tel:last-child { border-bottom: none; }
+
+        .btn-llamar-chico {
+            background: var(--verde-ok);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
         /* METRÓNOMO RCP */
         .caja-rcp {
             background: linear-gradient(145deg, rgba(37, 24, 28, 0.9), rgba(28, 36, 45, 0.9));
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border: 1.5px solid rgba(255, 59, 48, 0.4);
             border-radius: 16px;
             padding: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             text-align: center;
             box-shadow: 0 8px 25px rgba(0,0,0,0.4);
         }
@@ -149,7 +199,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 12px 20px;
             border-radius: 12px;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             font-weight: 800;
             cursor: pointer;
             width: 100%;
@@ -160,7 +210,6 @@
         .btn-metronomo.activo {
             background: var(--rojo-urgencia);
             box-shadow: 0 0 25px rgba(255, 59, 48, 0.7);
-            border-color: rgba(255,255,255,0.4);
         }
 
         .pulso-visual {
@@ -168,7 +217,7 @@
             height: 18px;
             background: #555;
             border-radius: 50%;
-            margin: 12px auto 0;
+            margin: 10px auto 0;
             transition: transform 0.08s, background 0.08s;
         }
 
@@ -192,15 +241,15 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
+            margin-bottom: 16px;
         }
 
         .card-protocolo {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border: 1px solid var(--card-border);
             border-radius: 14px;
-            padding: 16px 10px;
+            padding: 15px 10px;
             text-align: center;
             cursor: pointer;
             transition: transform 0.1s, border-color 0.2s, background 0.2s;
@@ -214,15 +263,15 @@
         }
 
         .card-protocolo .icono {
-            font-size: 2.1rem;
-            margin-bottom: 6px;
+            font-size: 2rem;
+            margin-bottom: 5px;
             display: block;
         }
 
         .card-protocolo .titulo {
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             font-weight: 700;
-            line-height: 1.25;
+            line-height: 1.2;
         }
 
         /* VISTA DETALLE DE PROTOCOLO */
@@ -230,7 +279,6 @@
             display: none;
             background: rgba(28, 36, 45, 0.95);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             border-radius: 16px;
             padding: 18px;
             border: 1px solid rgba(255, 255, 255, 0.12);
@@ -250,7 +298,7 @@
         }
 
         #detalle-titulo {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             color: #74b9ff;
             margin-bottom: 12px;
             line-height: 1.3;
@@ -263,15 +311,12 @@
 
         .lista-pasos li {
             background: rgba(19, 25, 31, 0.85);
-            padding: 12px;
+            padding: 11px;
             border-radius: 10px;
             margin-bottom: 8px;
-            font-size: 0.92rem;
+            font-size: 0.9rem;
             line-height: 1.4;
             border-left: 4px solid var(--verde-ok);
-            border-top: 1px solid rgba(255,255,255,0.04);
-            border-right: 1px solid rgba(255,255,255,0.04);
-            border-bottom: 1px solid rgba(255,255,255,0.04);
         }
 
         .caja-no-hacer {
@@ -279,7 +324,7 @@
             border: 1px solid rgba(255, 59, 48, 0.4);
             border-radius: 10px;
             padding: 12px;
-            font-size: 0.85rem;
+            font-size: 0.84rem;
             color: #ff9f9b;
             line-height: 1.35;
         }
@@ -305,7 +350,34 @@
         </button>
     </div>
 
+    <!-- UTILIDADES EXTRAS (LINTERNA Y TELÉFONOS) -->
+    <div class="utilidades-extras">
+        <button class="btn-util" onclick="toggleLinterna()">
+            <span>🔦</span> <span id="txt-linterna">Linterna SOS</span>
+        </button>
+        <button class="btn-util" onclick="toggleTelefonos()">
+            <span>📞</span> <span>Teléfonos Útiles</span>
+        </button>
+    </div>
+
     <div id="info-gps"></div>
+
+    <!-- PANEL DE TELÉFONOS ÚTILES LOCALES -->
+    <div id="panel-telefonos">
+        <div style="font-weight: 700; color: #34c759; margin-bottom: 8px; font-size: 0.85rem;">DIRECTORIO ZONAL (SAN MARTÍN)</div>
+        <div class="item-tel">
+            <div><strong>Hospital Perrupato</strong><br><span style="font-size: 0.72rem; color: #9baec8;">Conmutador / Guardia</span></div>
+            <a href="tel:02634420035" class="btn-llamar-chico">📞 Llamar</a>
+        </div>
+        <div class="item-tel" style="margin-top: 6px;">
+            <div><strong>Bomberos Voluntarios</strong><br><span style="font-size: 0.72rem; color: #9baec8;">San Martín</span></div>
+            <a href="tel:02634421111" class="btn-llamar-chico">📞 Llamar</a>
+        </div>
+        <div class="item-tel" style="margin-top: 6px;">
+            <div><strong>Defensa Civil</strong><br><span style="font-size: 0.72rem; color: #9baec8;">Municipalidad</span></div>
+            <a href="tel:103" class="btn-llamar-chico">📞 Llamar</a>
+        </div>
+    </div>
 
     <!-- METRÓNOMO RCP -->
     <div class="caja-rcp">
@@ -317,7 +389,7 @@
 
     <!-- MENÚ PRINCIPAL -->
     <div id="vista-menu">
-        <div class="titulo-seccion">Seleccioná la situación de urgencia:</div>
+        <div class="titulo-seccion">Urgencias en Personas:</div>
         <div class="grid-protocolos">
             <div class="card-protocolo" onclick="abrirProtocolo('rcp')">
                 <span class="icono">🫀</span>
@@ -325,11 +397,11 @@
             </div>
             <div class="card-protocolo" onclick="abrirProtocolo('atragantamiento')">
                 <span class="icono">😮‍💨</span>
-                <span class="titulo">Atragantamiento (Heimlich)</span>
+                <span class="titulo">Atragantamiento</span>
             </div>
             <div class="card-protocolo" onclick="abrirProtocolo('hemorragia')">
                 <span class="icono">🩸</span>
-                <span class="titulo">Hemorragia / Corte Grave</span>
+                <span class="titulo">Hemorragia Grave</span>
             </div>
             <div class="card-protocolo" onclick="abrirProtocolo('convulsiones')">
                 <span class="icono">⚡</span>
@@ -342,6 +414,18 @@
             <div class="card-protocolo" onclick="abrirProtocolo('quemaduras')">
                 <span class="icono">🔥</span>
                 <span class="titulo">Quemaduras</span>
+            </div>
+        </div>
+
+        <div class="titulo-seccion" style="margin-top: 8px;">Urgencias Veterinarias (Mascotas):</div>
+        <div class="grid-protocolos">
+            <div class="card-protocolo" onclick="abrirProtocolo('vet_calor')">
+                <span class="icono">🐕‍🦺</span>
+                <span class="titulo">Golpe de Calor (Perros/Gatos)</span>
+            </div>
+            <div class="card-protocolo" onclick="abrirProtocolo('vet_atragantamiento')">
+                <span class="icono">🐾</span>
+                <span class="titulo">Atragantamiento Animal</span>
             </div>
         </div>
     </div>
@@ -393,7 +477,7 @@
                 pasos: [
                     "1. Mantené la calma y mirá el reloj para medir cuánto dura la crisis.",
                     "2. Despejá la zona alrededor para que no se golpee contra muebles o el piso. Poné algo blando debajo de su cabeza.",
-                    "3. Aflojale ropa ajustada en el cuello (corbata, cuello de camisa).",
+                    "3. Aflojale ropa ajustada en el cuello.",
                     "4. Cuando terminen los movimientos, ponela de costado (posición lateral de seguridad) para que respire bien."
                 ],
                 noHacer: "❌ NUNCA le metas nada en la boca (ni dedos, ni cucharas, ni trapos). NO intentes sujetarla para frenar los movimientos."
@@ -417,6 +501,26 @@
                     "4. Cubrí la quemadura sin apretar usando film transparente de cocina limpio o gasas estériles húmedas."
                 ],
                 noHacer: "❌ NUNCA pongas hielo directo, pasta dental, manteca, aceite ni cremas caseras. NO revientes las ampollas."
+            },
+            vet_calor: {
+                titulo: "🐕‍🦺 Golpe de Calor en Mascotas",
+                pasos: [
+                    "1. Llevá al animal inmediatamente a la sombra y a un lugar fresco.",
+                    "2. Mojale el cuerpo de forma progresiva con agua fresca (NUNCA helada o con hielo, ya que produce shock térmico). Enfocáte en la cabeza, patas y panza.",
+                    "3. Ofre-cele agua fresca para que tome en pequeñas cantidades (no lo forces a beber rápido).",
+                    "4. Colocale un ventilador suave cerca y llevalo al veterinario apenas se estabilice un poco."
+                ],
+                noHacer: "❌ NUNCA lo sumerjas en agua helada ni lo envuelvas en toallas mojadas calientes. NO le des antifebriles humanos."
+            },
+            vet_atragantamiento: {
+                titulo: "🐾 Atragantamiento en Mascotas",
+                pasos: [
+                    "1. Abrí su boca con mucho cuidado y revisá si ves un objeto extraño a simple vista.",
+                    "2. Si lo ves y es fácil de sacar con una pinza o con los dedos, extraelo con cuidado hacia afuera.",
+                    "3. Si es un perro mediano/grande y no lo expulsa, levantá sus patas traseras (como carretilla) e inclinalo hacia adelante mientras le das firmes palmadas secas entre los omóplatos.",
+                    "4. Acudí de urgencia a una veterinaria."
+                ],
+                noHacer: "❌ NUNCA metas los dedos a ciegas hasta el fondo de la garganta si no ves el objeto, podés lastimar gravemente la vía aérea."
             }
         };
 
@@ -441,6 +545,43 @@
         function cerrarProtocolo() {
             document.getElementById('vista-detalle').style.display = 'none';
             document.getElementById('vista-menu').style.display = 'block';
+        }
+
+        // CONTROL DE LINTERNA / FLASH
+        let streamLinterna = null;
+        async function toggleLinterna() {
+            const txt = document.getElementById('txt-linterna');
+            try {
+                if (!streamLinterna) {
+                    streamLinterna = await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: 'environment' }
+                    });
+                    const track = streamLinterna.getVideoTracks()[0];
+                    const capabilities = track.getCapabilities();
+                    
+                    if (capabilities.torch) {
+                        await track.applyConstraints({ advanced: [{ torch: true }] });
+                        txt.innerText = "Apagar Linterna";
+                    } else {
+                        alert("Tu dispositivo no soporta flash de linterna por hardware.");
+                        streamLinterna.getTracks().forEach(t => t.stop());
+                        streamLinterna = null;
+                    }
+                } else {
+                    const track = streamLinterna.getVideoTracks()[0];
+                    await track.applyConstraints({ advanced: [{ torch: false }] });
+                    streamLinterna.getTracks().forEach(t => t.stop());
+                    streamLinterna = null;
+                    txt.innerText = "Linterna SOS";
+                }
+            } catch (e) {
+                alert("No se pudo acceder a la cámara para la linterna.");
+            }
+        }
+
+        function toggleTelefonos() {
+            const panel = document.getElementById('panel-telefonos');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
         }
 
         let audioCtx = null;
