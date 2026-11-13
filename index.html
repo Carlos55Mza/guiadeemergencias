@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0f1419">
+    <title>Asistente de Emergencias - San Martín</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root {
+            --bg-dark: #0f1419;
+            --card-bg: #1c242d;
+            --rojo-urgencia: #ff3b30;
+            --verde-ok: #34c759;
+            --amarillo-alerta: #ffcc00;
+            --azul-info: #0a84ff;
+            --texto-principal: #ffffff;
+            --texto-secundario: #9baec8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--texto-principal);
+            padding: 15px;
+            max-width: 500px;
+            margin: 0 auto;
+            padding-bottom: 40px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 18px;
+            border-bottom: 1px solid #2c3846;
+            padding-bottom: 12px;
+        }
+
+        header h1 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+        }
+
+        header p {
+            font-size: 0.8rem;
+            color: var(--texto-secundario);
+            margin-top: 3px;
+        }
+
+        /* BOTONES DE ACCIÓN INMEDIATA */
+        .barra-emergencia {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .btn-911 {
+            background: var(--rojo-urgencia);
+            color: white;
+            text-decoration: none;
+            padding: 14px 10px;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 1.05rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(255, 59, 48, 0.35);
+        }
+
+        .btn-gps {
+            background: var(--card-bg);
+            border: 1.5px solid var(--azul-info);
+            color: white;
+            padding: 12px 10px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #info-gps {
+            background: #16222f;
+            border: 1px solid #2b4c6f;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 16px;
+            font-size: 0.82rem;
+            text-align: center;
+            display: none;
+        }
+
+        /* METRÓNOMO RCP */
+        .caja-rcp {
+            background: linear-gradient(145deg, #25181c, #1c242d);
+            border: 1.5px solid #ff3b3066;
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .caja-rcp h2 {
+            font-size: 0.95rem;
+            color: #ff6b6b;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-metronomo {
+            background: #2c3846;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 6px;
+            transition: all 0.1s;
+        }
+
+        .btn-metronomo.activo {
+            background: var(--rojo-urgencia);
+            box-shadow: 0 0 20px rgba(255, 59, 48, 0.6);
+        }
+
+        .pulso-visual {
+            width: 18px;
+            height: 18px;
+            background: #555;
+            border-radius: 50%;
+            margin: 10px auto 0;
+            transition: transform 0.08s, background 0.08s;
+        }
+
+        .pulso-visual.beat {
+            background: #ff3b30;
+            transform: scale(1.45);
+        }
+
+        /* GRILLA DE PROTOCOLOS */
+        .titulo-seccion {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--texto-secundario);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .grid-protocolos {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .card-protocolo {
+            background: var(--card-bg);
+            border: 1px solid #2c3846;
+            border-radius: 12px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.1s, border-color 0.2s;
+        }
+
+        .card-protocolo:active {
+            transform: scale(0.97);
+            border-color: var(--azul-info);
+        }
+
+        .card-protocolo .icono {
+            font-size: 2rem;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .card-protocolo .titulo {
+            font-size: 0.9rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        /* VISTA DETALLE DE PROTOCOLO */
+        #vista-detalle {
+            display: none;
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 18px;
+            border: 1px solid #384656;
+        }
+
+        .btn-volver {
+            background: #2c3846;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-bottom: 14px;
+            cursor: pointer;
+        }
+
+        #detalle-titulo {
+            font-size: 1.25rem;
+            color: #74b9ff;
+            margin-bottom: 12px;
+        }
+
+        .lista-pasos {
+            list-style: none;
+            margin-bottom: 16px;
+        }
+
+        .lista-pasos li {
+            background: #13191f;
+            padding: 11px 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 0.92rem;
+            line-height: 1.4;
+            border-left: 4px solid var(--verde-ok);
+        }
+
+        .caja-no-hacer {
+            background: rgba(255, 59, 48, 0.12);
+            border: 1px solid rgba(255, 59, 48, 0.4);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 0.85rem;
+            color: #ff8a84;
+            line-height: 1.35;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🚑 GUÍA RÁPIDA DE EMERGENCIAS</h1>
+        <p>San Martín, Mendoza • Funciona sin internet</p>
+    </header>
+
+    <!-- ACCIONES RÁPIDAS -->
+    <div class="barra-emergencia">
+        <a href="tel:911" class="btn-911">
+            <span>📞 LLAMAR AL 911</span>
+            <span style="font-size: 0.7rem; font-weight: 500; margin-top: 2px;">Emergencias / Ambulancia</span>
+        </a>
+        <button class="btn-gps" onclick="obtenerUbicacion()">
+            <span style="font-size: 1.2rem; margin-bottom: 2px;">📍</span>
+            <span>¿Dónde estoy?</span>
+            <span style="font-size: 0.68rem; color: #9baec8; font-weight: 400;">Ver GPS para dictar</span>
+        </button>
+    </div>
+
+    <div id="info-gps"></div>
+
+    <!-- METRÓNOMO RCP -->
+    <div class="caja-rcp">
+        <h2>🫀 Metrónomo RCP (110 BPM)</h2>
+        <p style="font-size: 0.78rem; color: #cbd5e1; margin-bottom: 8px;">Marcá el ritmo exacto de compresiones en el pecho</p>
+        <button id="btn-metro" class="btn-metronomo" onclick="toggleMetronomo()">▶️ INICIAR RITMO RCP</button>
+        <div id="pulso-dot" class="pulso-visual"></div>
+    </div>
+
+    <!-- MENÚ PRINCIPAL -->
+    <div id="vista-menu">
+        <div class="titulo-seccion">Seleccioná la situación de urgencia:</div>
+        <div class="grid-protocolos">
+            <div class="card-protocolo" onclick="abrirProtocolo('rcp')">
+                <span class="icono">🫀</span>
+                <span class="titulo">Paro Cardíaco / RCP</span>
+            </div>
+            <div class="card-protocolo" onclick="abrirProtocolo('atragantamiento')">
+                <span class="icono">😮‍💨</span>
+                <span class="titulo">Atragantamiento (Heimlich)</span>
+            </div>
+            <div class="card-protocolo" onclick="abrirProtocolo('hemorragia')">
+                <span class="icono">🩸</span>
+                <span class="titulo">Hemorragia / Corte Grave</span>
+            </div>
+            <div class="card-protocolo" onclick="abrirProtocolo('convulsiones')">
+                <span class="icono">⚡</span>
+                <span class="titulo">Convulsiones</span>
+            </div>
+            <div class="card-protocolo" onclick="abrirProtocolo('calor')">
+                <span class="icono">🥵</span>
+                <span class="titulo">Golpe de Calor</span>
+            </div>
+            <div class="card-protocolo" onclick="abrirProtocolo('quemaduras')">
+                <span class="icono">🔥</span>
+                <span class="titulo">Quemaduras</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- VISTA DETALLE -->
+    <div id="vista-detalle">
+        <button class="btn-volver" onclick="cerrarProtocolo()">⬅️ Volver al menú</button>
+        <h2 id="detalle-titulo"></h2>
+        <ul id="detalle-pasos" class="lista-pasos"></ul>
+        <div id="detalle-no" class="caja-no-hacer"></div>
+    </div>
+
+    <script>
+        // BASE DE DATOS DE PROTOCOLOS
+        const protocolos = {
+            rcp: {
+                titulo: "🫀 RCP en Adultos (Solo Manos)",
+                pasos: [
+                    "1. Verificá que la escena sea segura para vos.",
+                    "2. Tocá firme los hombros y preguntale en voz alta si responde. Mirá si el pecho sube y baja.",
+                    "3. Si no responde y no respira normal, llamá ya al 911 o pedí a alguien que lo haga y busque un DEA.",
+                    "4. Arrodillate al costado, poné el talón de una mano en el centro del pecho y la otra encima entrelazando dedos.",
+                    "5. Comprimí fuerte y rápido (5 a 6 cm de profundidad) siguiendo el metrónomo (100-120 por minuto) sin parar hasta que llegue la ambulancia."
+                ],
+                noHacer: "❌ NO interrumpas las compresiones por más de 10 segundos. NO flexiones los codos: hacé fuerza con el peso de tu cuerpo."
+            },
+            atragantamiento: {
+                titulo: "😮‍💨 Atragantamiento (Maniobra de Heimlich)",
+                pasos: [
+                    "1. Si la persona tose con fuerza, animala a seguir tosiendo. No le pegues en la espalda.",
+                    "2. Si no puede hablar, toser ni respirar (se lleva las manos al cuello), parate detrás de ella.",
+                    "3. Rodeá su cintura con tus brazos. Cerrá un puño y colocalo justo arriba del ombligo (debajo de las costillas).",
+                    "4. Agarrá tu puño con la otra mano y presioná fuerte hacia adentro y hacia arriba (en forma de J).",
+                    "5. Repetí hasta que expulse el objeto. Si se desmaya, bajala al suelo y empezá RCP."
+                ],
+                noHacer: "❌ NO metas los dedos a ciegas en la boca si no ves el objeto claramente, podés empujarlo más adentro."
+            },
+            hemorragia: {
+                titulo: "🩸 Control de Hemorragia Grave",
+                pasos: [
+                    "1. Usá guantes o una bolsa limpia si tenés a mano para protegerte.",
+                    "2. Aplicá presión directa y muy firme sobre la herida usando gasas, una remera limpia o toalla.",
+                    "3. Si la sangre empapa la tela, NO la saques: poné otra encima y seguí apretando con fuerza.",
+                    "4. Si es en un brazo o pierna y el sangrado no frena con presión directa, aplicá un torniquete 5 a 7 cm arriba de la herida (nunca sobre una articulación) y anotá la hora."
+                ],
+                noHacer: "❌ NO retires el primer apósito empapado (rompés el coágulo que se está formando)."
+            },
+            convulsiones: {
+                titulo: "⚡ Crisis Convulsiva",
+                pasos: [
+                    "1. Mantené la calma y mirá el reloj para medir cuánto dura la crisis.",
+                    "2. Despejá la zona alrededor para que no se golpee contra muebles o el piso. Poné algo blando debajo de su cabeza.",
+                    "3. Aflojale ropa ajustada en el cuello (corbata, cuello de camisa).",
+                    "4. Cuando terminen los movimientos, ponela de costado (posición lateral de seguridad) para que respire bien."
+                ],
+                noHacer: "❌ NUNCA le metas nada en la boca (ni dedos, ni cucharas, ni trapos). NO intentes sujetarla para frenar los movimientos."
+            },
+            calor: {
+                titulo: "🥵 Golpe de Calor Severo",
+                pasos: [
+                    "1. Llevá a la persona de inmediato a un lugar fresco, a la sombra o con aire acondicionado.",
+                    "2. Aflojale o quitale el exceso de ropa.",
+                    "3. Enfriá el cuerpo rápido: mojale la piel con agua fresca, usá paños húmedos en cuello, axilas e ingle, y abanicala.",
+                    "4. Si está totalmente consciente y no vomita, dale sorbos pequeños de agua fresca."
+                ],
+                noHacer: "❌ NO le des líquidos si está mareada, confusa o semiinconsciente. NO uses alcohol para frotar la piel."
+            },
+            quemaduras: {
+                titulo: "🔥 Quemaduras Térmicas",
+                pasos: [
+                    "1. Alejá a la persona de la fuente de calor.",
+                    "2. Enfriá la zona quemada con agua corriente fresca (no helada) durante al menos 15 a 20 minutos.",
+                    "3. Retirá con cuidado anillos, relojes o pulseras antes de que la zona se hinche.",
+                    "4. Cubrí la quemadura sin apretar usando film transparente de cocina limpio o gasas estériles húmedas."
+                ],
+                noHacer: "❌ NUNCA pongas hielo directo, pasta dental, manteca, aceite ni cremas caseras. NO revientes las ampollas."
+            }
+        };
+
+        function abrirProtocolo(id) {
+            const data = protocolos[id];
+            document.getElementById('detalle-titulo').innerText = data.titulo;
+            
+            const lista = document.getElementById('detalle-pasos');
+            lista.innerHTML = '';
+            data.pasos.forEach(paso => {
+                const li = document.createElement('li');
+                li.innerText = paso;
+                lista.appendChild(li);
+            });
+
+            document.getElementById('detalle-no').innerText = data.noHacer;
+            document.getElementById('vista-menu').style.display = 'none';
+            document.getElementById('vista-detalle').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function cerrarProtocolo() {
+            document.getElementById('vista-detalle').style.display = 'none';
+            document.getElementById('vista-menu').style.display = 'block';
+        }
+
+        // METRÓNOMO DE AUDIO WEB API (110 BPM)
+        let audioCtx = null;
+        let intervaloMetro = null;
+        let metroActivo = false;
+
+        function sonarBeep() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.08);
+
+            const dot = document.getElementById('pulso-dot');
+            dot.classList.add('beat');
+            setTimeout(() => dot.classList.remove('beat'), 120);
+        }
+
+        function toggleMetronomo() {
+            const btn = document.getElementById('btn-metro');
+            if (metroActivo) {
+                clearInterval(intervaloMetro);
+                metroActivo = false;
+                btn.innerText = "▶️ INICIAR RITMO RCP";
+                btn.classList.remove('activo');
+            } else {
+                sonarBeep();
+                // 110 BPM = 545 ms por compresión
+                intervaloMetro = setInterval(sonarBeep, 545);
+                metroActivo = true;
+                btn.innerText = "⏹️ DETENER METRÓNOMO";
+                btn.classList.add('activo');
+            }
+        }
+
+        // GEOLOCALIZACIÓN PARA DICTADO AL 911
+        function obtenerUbicacion() {
+            const cajaGps = document.getElementById('info-gps');
+            cajaGps.style.display = 'block';
+            cajaGps.innerHTML = "📡 Buscando señal satelital GPS...";
+
+            if (!navigator.geolocation) {
+                cajaGps.innerHTML = "Tu navegador no soporta GPS.";
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const lat = pos.coords.latitude.toFixed(5);
+                    const lon = pos.coords.longitude.toFixed(5);
+                    const precision = Math.round(pos.coords.accuracy);
+                    cajaGps.innerHTML = `
+                        <strong>📍 Coordenadas exactas (precisión ±${precision}m):</strong><br>
+                        <span style="font-size: 1rem; color: #ffdd59; font-weight: bold;">Lat: ${lat} | Lon: ${lon}</span><br>
+                        <a href="https://maps.google.com/?q=${lat},${lon}" target="_blank" style="color: #74b9ff; text-decoration: underline; display: inline-block; margin-top: 5px;">Abrir en Google Maps</a>
+                    `;
+                },
+                () => {
+                    cajaGps.innerHTML = "⚠️ Activá la ubicación (GPS) de tu celular para ver las coordenadas.";
+                },
+                { enableHighAccuracy: true, timeout: 8000 }
+            );
+        }
+
+        // REGISTRO DEL SERVICE WORKER (MODO OFFLINE)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
+        }
+    </script>
+</body>
+</html>
